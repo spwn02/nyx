@@ -1,0 +1,3 @@
+[submodule "Nyx/vendor/spdlog"]
+	path = Nyx/vendor/spdlog
+	url = https://github.com/gabime/spdlog
