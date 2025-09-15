@@ -12,6 +12,10 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "Nyx/Log.h"
+
+#include <GLFW/glfw3.h>
+
 #ifdef NYX_PLATFORM_WINDOWS
 	#include <Windows.h>
 #endif

@@ -31,6 +31,7 @@ namespace Nyx {
 		{
 			std::stringstream ss;
 			ss << "KeyPressedEvent: " << m_keyCode << " (" << m_repeatCount << " repeats)";
+			return ss.str();
 		}
 
 		EVENT_CLASS_TYPE(KeyPressed)

@@ -1,31 +1,63 @@
 #include "nyxpch.h"
 #include "Application.h"
 
-#include "Nyx/Events/ApplicationEvent.h"
 #include "Log.h"
 
+#include <glad/glad.h>
+
 namespace Nyx {
+
+#define BIND_EVENT_FN(x) std::bind(&x, this, std::placeholders::_1)
+
 	Application::Application()
 	{
+		m_window = std::unique_ptr<Window>(Window::create());
+		m_window->setEventCallback(BIND_EVENT_FN(Application::onEvent));
 	}
 	Application::~Application()
 	{
 	}
 
+	void Application::pushLayer(Layer* layer)
+	{
+		m_layerStack.pushLayer(layer);
+	}
+
+	void Application::pushOverlay(Layer* layer)
+	{
+		m_layerStack.pushOverlay(layer);
+	}
+
+	void Application::onEvent(Event& e)
+	{
+		EventDispatcher dispatcher(e);
+		dispatcher.dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::onWindowClose));
+
+		for (auto it = m_layerStack.end(); it != m_layerStack.begin();)
+		{
+			(*--it)->onEvent(e);
+			if (e.handled)
+				break;
+		}
+	}
+
 	void Application::run()
 	{
-		WindowResizeEvent e(1280, 720);
-		if (e.isInCategory(EventCategoryApplication))
+		while (m_running)
 		{
-			NYX_TRACE(e.toString());
-			NYX_TRACE("App: YES");
-		}
-		if (e.isInCategory(EventCategoryInput))
-		{
-			NYX_TRACE(e.toString());
-			NYX_TRACE("Input: NO");
-		}
+			glClearColor(1, 0, 0, 1);
+			glClear(GL_COLOR_BUFFER_BIT);
 
-		while (true);
+			for (Layer* layer : m_layerStack)
+				layer->onUpdate();
+
+			m_window->onUpdate();
+		}
+	}
+
+	bool Application::onWindowClose(WindowCloseEvent& e)
+	{
+		m_running = false;
+		return true;
 	}
 }

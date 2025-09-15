@@ -38,8 +38,9 @@ namespace Nyx {
 
 	class NYX_API Event
 	{
-		friend class EventDispatcher;
 	public:
+		bool handled = false;
+
 		virtual EventType getEventType() const = 0;
 		virtual const char* getName() const = 0;
 		virtual int getCategoryFlags() const = 0;
@@ -49,8 +50,6 @@ namespace Nyx {
 		{
 			return getCategoryFlags() & category;
 		}
-	protected:
-		bool m_handled = false;
 	};
 
 	class EventDispatcher
@@ -66,7 +65,7 @@ namespace Nyx {
 		{
 			if (m_event.getEventType() == T::getStaticType())
 			{
-				m_event.m_handled = func(*(T*)&m_event);
+				m_event.handled = func(*(T*)&m_event);
 				return true;
 			}
 			return false;

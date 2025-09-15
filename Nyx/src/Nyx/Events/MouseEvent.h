@@ -14,7 +14,7 @@ namespace Nyx {
 		inline float getX() const { return m_mouseX; }
 		inline float getY() const { return m_mouseY; }
 
-		std:string toString() const override
+		std::string toString() const override
 		{
 			std::stringstream ss;
 			ss << "MouseMovedEvent: " << m_mouseX << ", " << m_mouseY;
@@ -38,8 +38,8 @@ namespace Nyx {
 
 		std::string toString() const override
 		{
-			std::string ss;
-			ss << "MouseScrolledEvent: " << getXOffset() << ", " << GetYOffset();
+			std::stringstream ss;
+			ss << "MouseScrolledEvent: " << getXOffset() << ", " << getYOffset();
 			return ss.str();
 		}
 
