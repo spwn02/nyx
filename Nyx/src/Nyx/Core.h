@@ -10,7 +10,11 @@
 	#error Nyx only supports Windows!
 #endif
 
-#ifdef NYX_ENABLE_ASSERTS
+#ifdef NYX_DEBUG
+	#define NYX_ENABLE_ASSERTS
+#endif
+
+#if NYX_ENABLE_ASSERTS 1
 	#define NYX_ASSERT(x, ...) { if(!(x)) { NYX_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
 	#define NYX_CORE_ASSERT(x, ...) { if(!(x)) { NYX_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
 #else
@@ -19,3 +23,5 @@
 #endif
 
 #define BIT(x) (1 << x)
+
+#define NYX_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)

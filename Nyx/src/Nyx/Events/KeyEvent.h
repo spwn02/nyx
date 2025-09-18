@@ -26,7 +26,6 @@ namespace Nyx {
 
 		inline int getRepeatCount() const { return m_repeatCount; }
 
-
 		std::string toString() const override
 		{
 			std::stringstream ss;
@@ -53,5 +52,21 @@ namespace Nyx {
 		}
 
 		EVENT_CLASS_TYPE(KeyReleased)
+	};
+
+	class NYX_API KeyTypedEvent : public KeyEvent
+	{
+	public:
+		KeyTypedEvent(int keyCode)
+			: KeyEvent(keyCode) { }
+
+		std::string toString() const override
+		{
+			std::stringstream ss;
+			ss << "KeyTypedEvent: " << m_keyCode;
+			return ss.str();
+		}
+
+		EVENT_CLASS_TYPE(KeyTyped)
 	};
 }

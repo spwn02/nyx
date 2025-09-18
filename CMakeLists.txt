@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
 
+set(CXX_STANDARD 23)
+set(CXX_STANDARD_REQUIRED 23)
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED 23)
+
 # Create project
 project("Nyx" VERSION 1.0)
 
@@ -34,7 +39,7 @@ target_include_directories(Nyx PUBLIC
 target_include_directories(Nyx PRIVATE
 	"Nyx/dependencies"
 	"Nyx/src/Nyx"
-	"Nyx/platform/Windows"
+	"Nyx"
 )
 
 # Precompile headers
@@ -46,7 +51,7 @@ include(cmake/CPM.cmake)
 find_package(OpenGL REQUIRED)
 CPMAddPackage("gh:gabime/spdlog#v1.15.3")
 CPMAddPackage("gh:glfw/glfw#3.4")
-CPMAddPackage("gh:ocornut/imgui#v1.91.0")
+CPMAddPackage("gh:ocornut/imgui#v1.92.0")
 
 set(DEPS "Nyx/dependencies")
 
@@ -60,6 +65,7 @@ add_library(imgui
 	${imgui_SOURCE_DIR}/imgui_draw.cpp
 	${imgui_SOURCE_DIR}/imgui_tables.cpp
 	${imgui_SOURCE_DIR}/imgui_widgets.cpp
+	${imgui_SOURCE_DIR}/imgui_demo.cpp
 )
 target_include_directories(imgui SYSTEM PUBLIC
 	${imgui_SOURCE_DIR}
