@@ -18,7 +18,11 @@ namespace Nyx {
 
 		m_window = std::unique_ptr<Window>(Window::create());
 		m_window->setEventCallback(NYX_BIND_EVENT_FN(Application::onEvent));
+
+		m_ImGuiLayer = new ImGuiLayer();
+		pushOverlay(m_ImGuiLayer);
 	}
+
 	Application::~Application()
 	{
 	}
@@ -58,8 +62,10 @@ namespace Nyx {
 			for (Layer* layer : m_layerStack)
 				layer->onUpdate();
 
-			auto [x, y] = Input::getMousePos();
-			NYX_CORE_TRACE("{0}, {1}", x, y);
+			m_ImGuiLayer->begin();
+			for (Layer* layer : m_layerStack)
+				layer->onImGuiRender();
+			m_ImGuiLayer->end();
 
 			m_window->onUpdate();
 		}

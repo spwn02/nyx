@@ -49,9 +49,10 @@ target_precompile_headers(Nyx PRIVATE Nyx/src/nyxpch.h)
 include(cmake/CPM.cmake)
 
 find_package(OpenGL REQUIRED)
-CPMAddPackage("gh:gabime/spdlog#v1.15.3")
-CPMAddPackage("gh:glfw/glfw#3.4")
-CPMAddPackage("gh:ocornut/imgui#v1.92.0")
+CPMADDPACKAGE("gh:gabime/spdlog@1.15.3")
+CPMADDPACKAGE("gh:glfw/glfw#3.4")
+CPMADDPACKAGE("gh:ocornut/imgui#docking@1.92.3")
+CPMADDPACKAGE("gh:g-truc/glm#1.0.1")
 
 set(DEPS "Nyx/dependencies")
 
@@ -78,6 +79,7 @@ target_link_libraries(Nyx PUBLIC
 	spdlog::spdlog
 	glad
 	imgui
+	glm
 )
 
 # Restrain this project to Windows-only

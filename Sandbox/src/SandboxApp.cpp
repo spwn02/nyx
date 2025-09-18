@@ -1,11 +1,17 @@
 #include <Nyx.h>
 
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
+#include <glm/mat4x4.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 class ExampleLayer : public Nyx::Layer
 {
 public:
 	ExampleLayer()
 		: Layer("Example")
-	{ }
+	{
+	}
 
 	void onUpdate() override
 	{
@@ -31,7 +37,6 @@ public:
 	Sandbox()
 	{
 		pushLayer(new ExampleLayer());
-		pushOverlay(new Nyx::ImGuiLayer());
 	}
 	
 	~Sandbox()

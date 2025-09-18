@@ -7,6 +7,8 @@
 #include "Events/Event.h"
 #include "Events/ApplicationEvent.h"
 
+#include "ImGui/ImGuiLayer.h"
+
 namespace Nyx {
 	class NYX_API Application
 	{
@@ -28,6 +30,7 @@ namespace Nyx {
 		bool onWindowClose(WindowCloseEvent& e);
 
 		std::unique_ptr<Window> m_window;
+		ImGuiLayer* m_ImGuiLayer;
 		bool m_running = true;
 		LayerStack m_layerStack;
 	private:
