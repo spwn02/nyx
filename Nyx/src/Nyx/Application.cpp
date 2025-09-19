@@ -9,71 +9,71 @@
 
 namespace Nyx {
 
-	Application* Application::s_instance = nullptr;
+  Application* Application::s_instance = nullptr;
 
-	Application::Application()
-	{
-		NYX_CORE_ASSERT(!s_instance, "Application already exists!")
-		s_instance = this;
+  Application::Application()
+  {
+    NYX_CORE_ASSERT(!s_instance, "Application already exists!")
+    s_instance = this;
+  
+    m_window = std::unique_ptr<Window>(Window::create());
+    m_window->setEventCallback(NYX_BIND_EVENT_FN(Application::onEvent));
+  
+    m_ImGuiLayer = new ImGuiLayer();
+    pushOverlay(m_ImGuiLayer);
+  }
 
-		m_window = std::unique_ptr<Window>(Window::create());
-		m_window->setEventCallback(NYX_BIND_EVENT_FN(Application::onEvent));
+  Application::~Application()
+  {
+  }
 
-		m_ImGuiLayer = new ImGuiLayer();
-		pushOverlay(m_ImGuiLayer);
-	}
+  void Application::pushLayer(Layer* layer)
+  {
+    m_layerStack.pushLayer(layer);
+    layer->onAttach();
+  }
 
-	Application::~Application()
-	{
-	}
+  void Application::pushOverlay(Layer* layer)
+  {
+    m_layerStack.pushOverlay(layer);
+    layer->onAttach();
+  }
 
-	void Application::pushLayer(Layer* layer)
-	{
-		m_layerStack.pushLayer(layer);
-		layer->onAttach();
-	}
+  void Application::onEvent(Event& e)
+  {
+    EventDispatcher dispatcher(e);
+    dispatcher.dispatch<WindowCloseEvent>(NYX_BIND_EVENT_FN(Application::onWindowClose));
 
-	void Application::pushOverlay(Layer* layer)
-	{
-		m_layerStack.pushOverlay(layer);
-		layer->onAttach();
-	}
+    for (auto it = m_layerStack.end(); it != m_layerStack.begin();)
+    {
+      (*--it)->onEvent(e);
+      if (e.handled)
+        break;
+    }
+  }
 
-	void Application::onEvent(Event& e)
-	{
-		EventDispatcher dispatcher(e);
-		dispatcher.dispatch<WindowCloseEvent>(NYX_BIND_EVENT_FN(Application::onWindowClose));
+  void Application::run()
+  {
+    while (m_running)
+    {
+      glClearColor(0.3f, 0.3f, 0.3f, 1);
+      glClear(GL_COLOR_BUFFER_BIT);
 
-		for (auto it = m_layerStack.end(); it != m_layerStack.begin();)
-		{
-			(*--it)->onEvent(e);
-			if (e.handled)
-				break;
-		}
-	}
+      for (Layer* layer : m_layerStack)
+        layer->onUpdate();
 
-	void Application::run()
-	{
-		while (m_running)
-		{
-			glClearColor(1, 0, 0, 1);
-			glClear(GL_COLOR_BUFFER_BIT);
+      m_ImGuiLayer->begin();
+      for (Layer* layer : m_layerStack)
+        layer->onImGuiRender();
+      m_ImGuiLayer->end();
 
-			for (Layer* layer : m_layerStack)
-				layer->onUpdate();
+      m_window->onUpdate();
+    }
+  }
 
-			m_ImGuiLayer->begin();
-			for (Layer* layer : m_layerStack)
-				layer->onImGuiRender();
-			m_ImGuiLayer->end();
-
-			m_window->onUpdate();
-		}
-	}
-
-	bool Application::onWindowClose(WindowCloseEvent& e)
-	{
-		m_running = false;
-		return true;
-	}
+  bool Application::onWindowClose(WindowCloseEvent& e)
+  {
+    m_running = false;
+    return true;
+  }
 }

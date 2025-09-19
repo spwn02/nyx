@@ -8,17 +8,17 @@
 #include <spdlog/fmt/ostr.h>
 
 namespace Nyx {
-	class Log
-	{
-	public:
-		static NYX_API void init();
+  class Log
+  {
+  public:
+    static NYX_API void init();
 
-		inline static NYX_API std::shared_ptr<spdlog::logger>& getCoreLogger() { return s_coreLogger; };
-		inline static NYX_API std::shared_ptr<spdlog::logger>& getClientLogger() { return s_clientLogger; };
-	private:
-		static NYX_API std::shared_ptr<spdlog::logger> s_coreLogger;
-		static NYX_API std::shared_ptr<spdlog::logger> s_clientLogger;
-	};
+    inline static NYX_API std::shared_ptr<spdlog::logger>& getCoreLogger() { return s_coreLogger; };
+    inline static NYX_API std::shared_ptr<spdlog::logger>& getClientLogger() { return s_clientLogger; };
+  private:
+    static NYX_API std::shared_ptr<spdlog::logger> s_coreLogger;
+    static NYX_API std::shared_ptr<spdlog::logger> s_clientLogger;
+  };
 }
 
 // Core log macros

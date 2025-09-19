@@ -4,7 +4,6 @@
 namespace Nyx {
   LayerStack::LayerStack()
   {
-    m_layers.begin();
   }
 
   LayerStack::~LayerStack()

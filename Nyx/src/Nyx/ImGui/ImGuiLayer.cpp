@@ -3,7 +3,6 @@
 
 #include <imgui.h>
 
-#define IMGUI_IMPL_API
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 
@@ -76,7 +75,7 @@ namespace Nyx {
   {
     ImGuiIO& io = ImGui::GetIO();
     Application& app = Application::get();
-    io.DisplaySize = ImVec2(app.getWindow().getWidth(), app.getWindow().getHeight());
+    io.DisplaySize = ImVec2((float)app.getWindow().getWidth(), (float)app.getWindow().getHeight());
 
     // Rendering
     ImGui::Render();

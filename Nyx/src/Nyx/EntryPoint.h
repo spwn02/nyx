@@ -9,14 +9,14 @@ extern Nyx::Application* Nyx::createApplication();
 
 int main(int argc, char** argv)
 {
-	Nyx::Log::init();
-	NYX_CORE_WARN("Initialized Log!");
-	int a = 5;
-	NYX_INFO("Hello! Var={0}", a);
+  Nyx::Log::init();
+  NYX_CORE_WARN("Initialized Log!");
+  int a = 5;
+  NYX_INFO("Hello! Var={0}", a);
 
-	auto app = Nyx::createApplication();
-	app->run();
-	delete app;
+  auto app = Nyx::createApplication();
+  app->run();
+  delete app;
 }
 
 #endif

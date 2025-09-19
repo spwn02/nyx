@@ -8,19 +8,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED 23)
 # Create project
 project("Nyx" VERSION 1.0)
 
-file(GLOB_RECURSE SRCS  "Nyx/src/*.cpp")
-file(GLOB_RECURSE HDRS  "Nyx/src/*.h")
-file(GLOB_RECURSE PSRCS "Nyx/platform/*.cpp")
-file(GLOB_RECURSE PHDRS "Nyx/platform/*.h")
+file(GLOB_RECURSE SRCS "Nyx/src/*.cpp")
+file(GLOB_RECURSE HDRS "Nyx/src/*.h")
 
 # Add library (Nyx Engine dll)
-add_library(Nyx SHARED
-	${SRCS} ${HDRS}
-	${PSRCS} ${PHDRS}
+add_library(Nyx STATIC
+  ${SRCS} ${HDRS}
 )
 set_target_properties(Nyx PROPERTIES
-	VERSION ${PROJECT_VERSION}
-	SOVERSION ${PROJECT_VERSION_MAJOR}
+  VERSION ${PROJECT_VERSION}
+  SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 # Add executable
 add_executable(Sandbox "Sandbox/src/SandboxApp.cpp")
@@ -33,13 +30,13 @@ set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT S
 
 # Include necessary header files
 target_include_directories(Nyx PUBLIC
-	"Nyx/src"
+  "Nyx/src"
 )
 
 target_include_directories(Nyx PRIVATE
-	"Nyx/dependencies"
-	"Nyx/src/Nyx"
-	"Nyx"
+  "Nyx/dependencies"
+  "Nyx/src/Nyx"
+  "Nyx"
 )
 
 # Precompile headers
@@ -62,60 +59,62 @@ target_include_directories(glad PUBLIC "${DEPS}/glad/include")
 
 #! ImGui
 add_library(imgui
-	${imgui_SOURCE_DIR}/imgui.cpp
-	${imgui_SOURCE_DIR}/imgui_draw.cpp
-	${imgui_SOURCE_DIR}/imgui_tables.cpp
-	${imgui_SOURCE_DIR}/imgui_widgets.cpp
-	${imgui_SOURCE_DIR}/imgui_demo.cpp
+  ${imgui_SOURCE_DIR}/imgui.cpp
+  ${imgui_SOURCE_DIR}/imgui_draw.cpp
+  ${imgui_SOURCE_DIR}/imgui_tables.cpp
+  ${imgui_SOURCE_DIR}/imgui_widgets.cpp
+  ${imgui_SOURCE_DIR}/imgui_demo.cpp
 )
 target_include_directories(imgui SYSTEM PUBLIC
-	${imgui_SOURCE_DIR}
+  ${imgui_SOURCE_DIR}
 )
 
 target_link_libraries(Nyx PUBLIC
-	OpenGL::GL
-	opengl32.lib
-	glfw
-	spdlog::spdlog
-	glad
-	imgui
-	glm
+  OpenGL::GL
+  opengl32.lib
+  glfw
+  spdlog::spdlog
+  glad
+  imgui
+  glm
 )
 
 # Restrain this project to Windows-only
 if(WIN32)
-	# Set C++ standard to C++23
-	set(CXX_STANDARD 23)
-	set(CXX_STANDARD_REQUIRED TRUE)
+  # Set C++ standard to C++23
+  set(CXX_STANDARD 23)
+  set(CXX_STANDARD_REQUIRED TRUE)
 
-	target_compile_definitions(Nyx
-		PUBLIC NYX_PLATFORM_WINDOWS
-		PRIVATE NYX_BUILD_DLL
-		PRIVATE GLFW_INCLUDE_NONE
-	)
+  target_compile_definitions(Nyx
+    PUBLIC NYX_PLATFORM_WINDOWS
+    PRIVATE NYX_BUILD_DLL
+    PRIVATE GLFW_INCLUDE_NONE
+    PRIVATE _GLFW_WIN32
+    PUBLIC _CRT_SECURE_NO_WARNINGS
+  )
 else()
-	message(FATAL_ERROR "This project is only supported on Windows.")
+  message(FATAL_ERROR "This project is only supported on Windows.")
 endif()
 
 # Define compile options and definitions
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	# Turn on static runtime
-	add_compile_options(/MDd -O0 -g /utf-8)
-	target_compile_definitions(Nyx
-		PRIVATE NYX_DEBUG
-	)
-	set_property(TARGET Nyx PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-	set_property(TARGET Sandbox PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+  # Turn on static runtime
+  add_compile_options(/MTd -O0 -g /utf-8)
+  target_compile_definitions(Nyx
+    PRIVATE NYX_DEBUG
+  )
+  set_property(TARGET Nyx PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+  set_property(TARGET Sandbox PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
-	# Turn on static runtime
-	add_compile_options(/MD)
-	target_compile_definitions(Nyx
-		PRIVATE NYX_RELEASE
-	)
+  # Turn on static runtime
+  add_compile_options(/MT)
+  target_compile_definitions(Nyx
+    PRIVATE NYX_RELEASE
+  )
 elseif(CMAKE_BUILD_TYPE STREQUAL "Dist")
-	# Turn on static runtime
-	add_compile_options(/MD)
-	target_compile_definitions(Nyx
-		PRIVATE NYX_DIST
-	)
+  # Turn on static runtime
+  add_compile_options(/MT)
+  target_compile_definitions(Nyx
+    PRIVATE NYX_DIST
+  )
 endif()
